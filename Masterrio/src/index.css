@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/* Qaranlıq rejimi manuel klas ilə idarə etmək üçün: */
+@custom-variant dark (&:is(.dark *));
+
+@layer utilities {
+  .animate-cardAppear {
+    animation: cardAppear 0.5s ease-out forwards;
+  }
+  .animate-shake {
+    animation: shake 0.4s ease-in-out;
+  }
+  
+  /* Yeni sürüşüb görünmə animasiyası (Slide Up Fade) */
+  .animate-slideUpFade {
+    opacity: 0;
+    animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  /* Gecikdirmə (Delay) üçün xüsusi siniflər - Ardıcıl animasiya yaradacaq */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
