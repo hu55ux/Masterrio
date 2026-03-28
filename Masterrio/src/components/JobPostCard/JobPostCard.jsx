@@ -2,10 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '@/utils/axiosInstance';
 
-const JobPostCard = ({ jobPost, isManageMode = false, onDelete }) => {
+const JobPostCard = ({ jobPost, isManageMode = false, onDelete, onEditStatus, onEditJob }) => {
   const handleDelete = (e) => {
     e.stopPropagation();
     onDelete(jobPost.id);
+  };
+
+  const handleEditStatus = (e) => {
+    e.stopPropagation();
+    onEditStatus(jobPost);
+  };
+
+  const handleEditJob = (e) => {
+    e.stopPropagation();
+    onEditJob(jobPost);
   };
   const [isExpanded, setIsExpanded] = useState(false);
   const [ownerInfo, setOwnerInfo] = useState(null);
@@ -44,6 +54,8 @@ const JobPostCard = ({ jobPost, isManageMode = false, onDelete }) => {
 
   if (!jobPost) return null;
 
+  const currentStatus = jobPost.status !== undefined ? jobPost.status : jobPost.jpStatus;
+
   return (
     <div
       className="w-full bg-white dark:bg-white/5 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl shadow-sm hover:shadow-md dark:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 overflow-hidden cursor-pointer"
@@ -53,27 +65,102 @@ const JobPostCard = ({ jobPost, isManageMode = false, onDelete }) => {
         {/* Header: Title and Status */}
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2">
-              {jobPost.title}
-            </h3>
-            <p className="text-sm font-medium text-violet-600 dark:text-[#a78bfa] mt-1">
+            <div className="flex items-start gap-3 flex-wrap mb-2">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2 leading-tight">
+                {jobPost.title}
+              </h3>
+              <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center self-start mt-0.5 shadow-sm ${
+                currentStatus === 'Pending' || currentStatus === 0 ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400' :
+                currentStatus === 'Active' || currentStatus === 1 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' :
+                currentStatus === 'InProgress' || currentStatus === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' :
+                currentStatus === 'Completed' || currentStatus === 3 ? 'bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-400' :
+                'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400' // Canceled
+              }`}>
+                {currentStatus === 0 ? 'Pending' :
+                 currentStatus === 1 ? 'Active' :
+                 currentStatus === 2 ? 'In Progress' :
+                 currentStatus === 3 ? 'Completed' :
+                 currentStatus === 4 ? 'Canceled' :
+                 currentStatus || 'Unknown'}
+              </span>
+            </div>
+            <p className="text-sm font-medium text-primary-600 dark:text-primary-400">
               {jobPost.requiredSkillName}
             </p>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${jobPost.status?.toLowerCase() === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300' : 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300'}`}>
-              {jobPost.status}
-            </span>
-            {isManageMode && (
-              <button 
-                onClick={handleDelete}
-                className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
-                title="Delete Job Post"
+          
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <div className="text-right">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Budget</p>
+              <p className="text-xl md:text-2xl font-black text-primary-600 dark:text-primary-400">
+                {jobPost.budget} <span className="text-sm font-medium">AZN</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p className={`text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed mb-6 ${isExpanded ? "" : "line-clamp-2"}`}>
+          {jobPost.description}
+        </p>
+
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-slate-100 dark:border-white/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center overflow-hidden border border-slate-200 dark:border-white/10">
+              {loadingOwner ? (
+                <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+              ) : ownerInfo?.profilePicture ? (
+                <img src={ownerInfo.profilePicture} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-slate-400 font-bold">{displayOwnerInitial}</span>
+              )}
+            </div>
+            <div>
+              <Link 
+                to={displayOwnerId ? `/profile/${displayOwnerId}` : '#'}
+                onClick={(e) => e.stopPropagation()}
+                className={`text-sm font-bold text-slate-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors ${!displayOwnerId && 'pointer-events-none'}`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                </svg>
-              </button>
+                {loadingOwner ? "Loading..." : displayOwnerName}
+              </Link>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Client</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="px-4 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{jobPost.requiredSkillName || "No skill specified"}</span>
+            </div>
+            
+            {isManageMode && (
+              <div className="flex gap-1">
+                <button 
+                  onClick={handleEditJob}
+                  className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors"
+                  title="Edit Job Details"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.13 1.897L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={handleEditStatus}
+                  className="p-1.5 text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-500/10 rounded-lg transition-colors"
+                  title="Change Job Status"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={handleDelete}
+                  className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+                  title="Remove Job"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.34 6m-4.74 0-.34-6m4.74-6.33L14.5 3h-5l-.31 3.33M4.5 18.75A2.25 2.25 0 0 0 6.75 21h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75H4.5v12z" />
+                  </svg>
+                </button>
+              </div>
             )}
           </div>
         </div>

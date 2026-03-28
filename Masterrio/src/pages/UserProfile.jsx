@@ -80,7 +80,7 @@ const UserProfile = () => {
   const isMaster = userData.role === 'Master';
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f0c29] dark:via-[#1a1a2e] dark:to-[#16213e] transition-colors duration-500 font-['Inter',sans-serif]">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f0c29] dark:via-[#1a1a2e] dark:to-[#16213e] transition-colors duration-300 font-['Inter',sans-serif]">
 
 
 

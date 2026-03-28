@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import CustomCursor from "./components/CustomCursor/CustomCursor";
 import Demo from "./pages/Demo";
 import UserProfile from "./pages/UserProfile";
 import MyProfile from "./pages/MyProfile";
@@ -24,6 +26,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <CustomCursor />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -31,18 +34,21 @@ function App() {
         <Route
           path="*"
           element={
-            <>
+            <div className="flex flex-col min-h-screen">
               <Navbar />
-              <Routes>
-                <Route path="/" element={<Navigate to="/jobs" replace />} />
-                <Route path="/demo" element={<Demo />} />
-                <Route path="/jobs" element={<AllJobs />} />
-                <Route path="/create-job" element={<CreateJobPost />} />
-                <Route path="/job/:jobId" element={<JobDetail />} />
-                <Route path="/profile/:id" element={<UserProfile />} />
-                <Route path="/my-profile" element={<MyProfile />} />
-              </Routes>
-            </>
+              <main className="flex-1 w-full relative">
+                <Routes>
+                  <Route path="/" element={<Navigate to="/jobs" replace />} />
+                  <Route path="/demo" element={<Demo />} />
+                  <Route path="/jobs" element={<AllJobs />} />
+                  <Route path="/create-job" element={<CreateJobPost />} />
+                  <Route path="/job/:jobId" element={<JobDetail />} />
+                  <Route path="/profile/:id" element={<UserProfile />} />
+                  <Route path="/my-profile" element={<MyProfile />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
           }
         />
       </Routes>

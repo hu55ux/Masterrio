@@ -8,11 +8,11 @@ const UserProfileCard = ({ user }) => {
   const displayRole = Array.isArray(user.roles) && user.roles.length > 0 ? user.roles[0] : (user.role || 'User');
   
   return (
-    <div className="w-full max-w-md bg-white dark:bg-white/5 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 group">
+    <div className="w-full max-w-md bg-white dark:bg-white/5 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group">
       {/* Cover/Header Section */}
       <div className="h-24 bg-linear-to-r from-violet-600 to-indigo-600 dark:from-[#7c3aed] dark:to-[#6d28d9] relative">
         <div className="absolute -bottom-12 left-6">
-          <div className="w-24 h-24 rounded-2xl bg-white dark:bg-[#1a1a2e] p-1 shadow-lg group-hover:scale-105 transition-transform duration-500">
+          <div className="w-24 h-24 rounded-2xl bg-white dark:bg-[#1a1a2e] p-1 shadow-lg group-hover:scale-105 transition-transform duration-300">
             <div className="w-full h-full rounded-xl bg-gray-100 dark:bg-white/10 flex items-center justify-center text-3xl font-bold text-violet-600 dark:text-[#a78bfa]">
               {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
             </div>

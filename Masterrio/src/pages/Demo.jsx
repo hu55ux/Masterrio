@@ -45,7 +45,7 @@ const Demo = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-linear-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f0c29] dark:via-[#1a1a2e] dark:to-[#16213e] transition-colors duration-500 p-6 sm:p-12 font-['Inter','Segoe_UI',system-ui,sans-serif]">
+    <div className="min-h-screen relative bg-linear-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f0c29] dark:via-[#1a1a2e] dark:to-[#16213e] transition-colors duration-300 p-6 sm:p-12 font-['Inter','Segoe_UI',system-ui,sans-serif]">
       {/* Theme Toggle */}
       <button
         onClick={toggleDarkmode}

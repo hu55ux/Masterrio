@@ -1,7 +1,50 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary-50: #f0f7ff;
+  --color-primary-100: #e0effe;
+  --color-primary-200: #bae0fd;
+  --color-primary-300: #7cc8fb;
+  --color-primary-400: #38abf7;
+  --color-primary-500: #0e8ce6;
+  --color-primary-600: #026dc6;
+  --color-primary-700: #0357a1;
+  --color-primary-800: #074a85;
+  --color-primary-900: #0c3f6e;
+  --color-primary-950: #082849;
+
+  --color-accent-50: #ecfdf5;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+}
+
 /* Qaranlıq rejimi manuel klas ilə idarə etmək üçün: */
 @custom-variant dark (&:is(.dark *));
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  }
+  .dark body {
+    @apply bg-[#0f1118] text-slate-100;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
+  }
+  .dark .glass {
+    @apply bg-slate-900/60 backdrop-blur-md border border-slate-700/30;
+  }
+  
+  .premium-shadow {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+  }
+  .dark .premium-shadow {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+  }
+}
 
 @layer utilities {
   .animate-cardAppear {
