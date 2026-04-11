@@ -46,7 +46,6 @@ axiosInstance.interceptors.response.use(
     const status = error.response?.status;
 
     if (status === 401) {
-      // Əgər sorğu onsuz da login və ya refresh üçündürsə, təkrar etmə, sadəcə xəta at.
       if (originalRequest.url.toLowerCase().includes("/login") || originalRequest.url.toLowerCase().includes("/refresh")) {
         useTokens.getState().clearTokens();
         if (!originalRequest.url.toLowerCase().includes("/login")) {
@@ -74,16 +73,26 @@ axiosInstance.interceptors.response.use(
         const { accessToken, refreshToken } = state;
 
         return new Promise(function (resolve, reject) {
-          // Sending both tokens in case the backend requires the expired token too.
-          axiosInstance.post("/Auth/refresh", { accessToken, refreshToken })
+          // Bypassing axiosInstance to prevent injecting the expired Authorization header.
+          // Confirmed request body structure: { "refreshToken": "string" }
+          axios.post("/api/Auth/refresh", { 
+            refreshToken: refreshToken 
+          }, {
+            headers: { "Content-Type": "application/json" }
+          })
             .then(({ data }) => {
-              // Determine new tokens from typical response shapes
-              const newAccess = data.accessToken || data.data?.accessToken;
-              const newRefresh = data.refreshToken || data.data?.refreshToken;
+              // Confirmed response structure: { "success": true, "data": { "accessToken": "...", "refreshToken": "..." } }
+              // Accessing data.data as the payload container.
+              const payload = data?.data;
+              const newAccess = payload?.accessToken;
+              const newRefresh = payload?.refreshToken;
 
               if (newAccess && newRefresh) {
                 state.setAccessToken(newAccess);
                 state.setRefreshToken(newRefresh);
+                
+                // If the response includes user ID, update it as well (matches Login behavior)
+                if (payload?.id) state.setUserId(payload.id);
 
                 axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + newAccess;
                 originalRequest.headers['Authorization'] = 'Bearer ' + newAccess;
@@ -91,10 +100,12 @@ axiosInstance.interceptors.response.use(
                 processQueue(null, newAccess);
                 resolve(axiosInstance(originalRequest));
               } else {
-                throw new Error("Invalid refresh response");
+                console.error("Token refresh failed: response missing expected data properties", data);
+                throw new Error("Invalid refresh response structure");
               }
             })
             .catch((err) => {
+              console.error("Critical: Token refresh failed", err.response?.data || err.message);
               processQueue(err, null);
               state.clearTokens();
               window.location.href = "/login";

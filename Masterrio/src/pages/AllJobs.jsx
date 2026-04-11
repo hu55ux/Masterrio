@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import axiosInstance from '@/utils/axiosInstance';
 import JobPostCard from '@/components/JobPostCard/JobPostCard';
 import { useDarkmode } from "@/stores/useDarkmode";
 import { Link } from 'react-router-dom';
 
 const AllJobs = () => {
+  const { t } = useTranslation();
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(9);
@@ -68,7 +70,7 @@ const AllJobs = () => {
       setHasMore(fetchedJobs.length === pageSize);
     } catch (err) {
       console.error("Error fetching jobs:", err);
-      setError("Failed to load jobs. Please check your connection.");
+      setError(t('common.error'));
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -96,10 +98,12 @@ const AllJobs = () => {
         <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 animate-slideUpFade">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
-              Find Your Next <span className="text-primary-600 dark:text-primary-400">Masterpiece</span>
+              {t('jobs.titlePrefix')}{' '}
+              <span className="text-primary-600 dark:text-primary-400">{t('jobs.titleHighlight')}</span>
+              {t('jobs.titleSuffix') && ` ${t('jobs.titleSuffix')}`}
             </h1>
             <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
-              Browse through a curated list of high-quality job opportunities from verified clients across the platform.
+              {t('jobs.description')}
             </p>
           </div>
 
@@ -111,7 +115,7 @@ const AllJobs = () => {
             </div>
             <input
               type="text"
-              placeholder="Search by title or skill..."
+              placeholder={t('jobs.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-12 pr-4 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all premium-shadow dark:text-white"
@@ -130,7 +134,7 @@ const AllJobs = () => {
                 : "bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
             >
-              {s}
+              {t(`jobs.statuses.${s}`)}
             </button>
           ))}
         </div>
@@ -154,8 +158,8 @@ const AllJobs = () => {
         ) : jobs.length === 0 ? (
           <div className="text-center py-24 glass rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-white/10">
             <div className="w-20 h-20 bg-slate-100 dark:bg-white/5 rounded-4xl flex items-center justify-center mx-auto mb-6 text-3xl">🔍</div>
-            <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">No jobs found</h3>
-            <p className="text-slate-500 dark:text-slate-400">Try adjusting your search or check back later.</p>
+            <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{t('jobs.noJobs')}</h3>
+            <p className="text-slate-500 dark:text-slate-400">{t('jobs.tryAdjusting')}</p>
           </div>
         ) : (
           <>
@@ -173,7 +177,7 @@ const AllJobs = () => {
                   className="px-10 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-black premium-shadow hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                 >
                   <span className={loadingMore ? "opacity-0" : "flex items-center gap-2"}>
-                    Load More Jobs
+                    {t('jobs.loadMore')}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 group-hover:translate-y-1 transition-transform">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
@@ -187,7 +191,7 @@ const AllJobs = () => {
               </div>
             ) : jobs.length > 0 && (
               <div className="mt-16 text-center animate-slideUpFade opacity-40">
-                <p className="text-slate-500 dark:text-slate-400 font-medium">You've reached the end of the collection ✨</p>
+                <p className="text-slate-500 dark:text-slate-400 font-medium">{t('jobs.endOfCollection')}</p>
               </div>
             )}
           </>

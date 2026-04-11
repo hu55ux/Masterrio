@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axiosInstance from '@/utils/axiosInstance';
 import UserProfileCard from '@/components/UserProfileCard/UserProfileCard';
 import JobPostCard from '@/components/JobPostCard/JobPostCard';
@@ -12,6 +13,7 @@ const MyProfile = () => {
   const navigate = useNavigate();
   const { isDarkmodeActive, toggleDarkmode } = useDarkmode();
   const { userId, role, clearTokens } = useTokens();
+  const { t } = useTranslation();
   const [userData, setUserData] = useState(null);
   const [userRoleLocal, setUserRoleLocal] = useState("");
   const [userItems, setUserItems] = useState([]);
@@ -78,6 +80,7 @@ const MyProfile = () => {
   const [jobEditForm, setJobEditForm] = useState({
     title: "",
     description: "",
+    location: "",
     budget: 0,
     requiredSkillId: ""
   });
@@ -113,7 +116,7 @@ const MyProfile = () => {
     setCreateSkillSuccess("");
     try {
       await axiosInstance.post('/Skill', createSkillForm);
-      setCreateSkillSuccess("Skill created successfully!");
+      setCreateSkillSuccess(t('modals.skill.successMessage') || "Skill created successfully!");
       fetchAllSkills(); // Refresh the skills list instantly
       setTimeout(() => {
         setIsCreateSkillModalOpen(false);
@@ -121,7 +124,7 @@ const MyProfile = () => {
         setCreateSkillSuccess("");
       }, 1500);
     } catch (err) {
-      setCreateSkillError(err.response?.data?.message || err.response?.data?.title || "Failed to create skill.");
+      setCreateSkillError(err.response?.data?.message || err.response?.data?.title || t('common.error'));
     } finally {
       setCreateSkillLoading(false);
     }
@@ -153,7 +156,7 @@ const MyProfile = () => {
 
   const fetchData = async () => {
     if (!userId) {
-      setError("You must be logged in to view your profile.");
+      setError(t('profile.sessionExpired') || "You must be logged in to view your profile.");
       setLoading(false);
       return;
     }
@@ -162,7 +165,7 @@ const MyProfile = () => {
     setError(null);
     try {
       // Fetch Profile
-      const userResponse = await axiosInstance.post(`/Auth/id/${userId}`, {});
+      const userResponse = await axiosInstance.post('/Auth/details', { userId });
       const user = userResponse.data?.data || userResponse.data;
       setUserData(user);
       setEditFormData({
@@ -201,7 +204,7 @@ const MyProfile = () => {
       if (err.response?.status === 401) {
         navigate('/login');
       } else {
-        setError("Failed to load profile data.");
+        setError(t('common.error'));
       }
     } finally {
       setLoading(false);
@@ -215,7 +218,7 @@ const MyProfile = () => {
   const handleChangePasswordSubmit = async (e) => {
     e.preventDefault();
     if (passwordFormData.newPassword !== passwordFormData.confirmNewPassword) {
-      setPasswordError("New passwords do not match.");
+      setPasswordError(t('modals.password.errorMismatch') || "New passwords do not match.");
       return;
     }
     setPasswordLoading(true);
@@ -224,17 +227,17 @@ const MyProfile = () => {
     try {
       const response = await axiosInstance.post('/Auth/changePassword', passwordFormData);
       if (response.data?.success || response.status === 200) {
-        setPasswordSuccess("Password changed successfully!");
+        setPasswordSuccess(t('modals.password.successMessage') || "Password changed successfully!");
         setTimeout(() => {
           setIsChangePasswordModalOpen(false);
           setPasswordFormData({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
           setPasswordSuccess("");
         }, 2000);
       } else {
-        setPasswordError(response.data?.message || "Failed to change password.");
+        setPasswordError(response.data?.message || t('common.error'));
       }
     } catch (err) {
-      setPasswordError(err.response?.data?.message || "An error occurred.");
+      setPasswordError(err.response?.data?.message || t('common.error'));
     } finally {
       setPasswordLoading(false);
     }
@@ -248,14 +251,14 @@ const MyProfile = () => {
   const handleDeleteJob = async (jobId) => {
     setConfirmModal({
       isOpen: true,
-      title: "Delete Job Post",
-      message: "Are you sure you want to permanently delete this job post?",
+      title: t('modals.confirm.deleteJobTitle'),
+      message: t('modals.confirm.deleteJobMessage'),
       onConfirm: async () => {
         try {
           await axiosInstance.delete(`/JobPost/${jobId}`);
           setUserItems(prev => prev.filter(item => item.id !== jobId));
         } catch (err) {
-          alert("Failed to delete job post.");
+          alert(t('common.error'));
           console.error(err);
         }
       },
@@ -285,10 +288,10 @@ const MyProfile = () => {
         setSelectedJobForStatus(null);
         fetchData(); // Refresh list
       } else {
-        setStatusUpdateError("Failed to update status.");
+        setStatusUpdateError(t('common.error'));
       }
     } catch (err) {
-      setStatusUpdateError(err.response?.data?.message || "Error updating status.");
+      setStatusUpdateError(err.response?.data?.message || t('common.error'));
     } finally {
       setStatusUpdateLoading(false);
     }
@@ -299,6 +302,7 @@ const MyProfile = () => {
     setJobEditForm({
       title: job.title || "",
       description: job.description || "",
+      location: job.location || "",
       budget: job.budget || 0,
       requiredSkillId: job.requiredSkillId || ""
     });
@@ -315,7 +319,7 @@ const MyProfile = () => {
       setSelectedJobForEdit(null);
       fetchData(); // Refresh list
     } catch (err) {
-      setJobEditError(err.response?.data?.message || "Error updating job.");
+      setJobEditError(err.response?.data?.message || t('common.error'));
     } finally {
       setJobEditLoading(false);
     }
@@ -324,14 +328,14 @@ const MyProfile = () => {
   const handleRemoveSkill = async (skillId) => {
     setConfirmModal({
       isOpen: true,
-      title: "Remove Skill",
-      message: "Are you sure you want to remove this skill from your profile?",
+      title: t('modals.confirm.removeSkillTitle'),
+      message: t('modals.confirm.removeSkillMessage'),
       onConfirm: async () => {
         try {
           await axiosInstance.delete(`/Skill/removeSkill/${skillId}`);
           setUserItems(prev => prev.filter(item => item.id !== skillId));
         } catch (err) {
-          alert("Failed to remove skill.");
+          alert(t('common.error'));
           console.error(err);
         }
       },
@@ -349,10 +353,10 @@ const MyProfile = () => {
         setIsEditModalOpen(false);
         fetchData(); // Refresh data
       } else {
-        setEditError(response.data?.message || "Failed to update profile.");
+        setEditError(response.data?.message || t('common.error'));
       }
     } catch (err) {
-      setEditError(err.response?.data?.message || "An error occurred.");
+      setEditError(err.response?.data?.message || t('common.error'));
     } finally {
       setEditLoading(false);
     }
@@ -363,7 +367,7 @@ const MyProfile = () => {
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f0c29] dark:via-[#1a1a2e] dark:to-[#16213e]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-violet-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-500 dark:text-white/50 font-medium animate-pulse">Loading Your Profile...</p>
+          <p className="text-gray-500 dark:text-white/50 font-medium animate-pulse">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -374,10 +378,10 @@ const MyProfile = () => {
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f0c29] dark:via-[#1a1a2e] dark:to-[#16213e] p-6">
         <div className="max-w-md w-full bg-white dark:bg-white/5 backdrop-blur-xl p-10 rounded-3xl border border-gray-200 dark:border-white/10 text-center shadow-xl">
           <div className="w-20 h-20 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Error</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-8">{error || "User session expired"}</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('common.error')}</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">{error || t('profile.sessionExpired')}</p>
           <Link to="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-violet-600 dark:bg-[#7c3aed] text-white rounded-xl font-semibold hover:bg-violet-700 transition-colors">
-            Login Again
+            {t('nav.signIn')}
           </Link>
         </div>
       </div>
@@ -402,7 +406,7 @@ const MyProfile = () => {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
               </svg>
-              Change Password
+              {t('profile.changePassword')}
             </button>
             <button
               onClick={() => setIsEditModalOpen(true)}
@@ -411,7 +415,7 @@ const MyProfile = () => {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.13 1.897L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
               </svg>
-              Edit Profile
+              {t('profile.editProfile')}
             </button>
           </div>
         </div>
@@ -420,7 +424,7 @@ const MyProfile = () => {
         <section className="space-y-8 animate-slideUpFade">
           <div className="flex items-center gap-4">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Manage {userRoleLocal === "Admin" ? "Platform Data" : userRoleLocal === "Master" ? "Your Skills" : "Your Job Posts"}
+              {t('profile.manageTitle', { type: userRoleLocal === "Admin" ? t('profile.manageTypePlatform') : userRoleLocal === "Master" ? t('profile.manageTypeSkills') : t('profile.manageTypeJobs') })}
             </h2>
             <div className="h-px flex-1 bg-linear-to-r from-gray-200 to-transparent dark:from-white/10 dark:to-transparent"></div>
 
@@ -435,7 +439,7 @@ const MyProfile = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
-                Add Skill
+                {t('profile.addSkill')}
               </button>
             )}
           </div>
@@ -443,7 +447,7 @@ const MyProfile = () => {
           {userRoleLocal === "Admin" ? (
             <div className="space-y-12">
               <div>
-                <h3 className="text-xl font-black mb-4 dark:text-white">Your Admin Job Posts</h3>
+                <h3 className="text-xl font-black mb-4 dark:text-white">{t('profile.adminJobs')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {adminJobs.map(job => (
                     <JobPostCard
@@ -456,11 +460,10 @@ const MyProfile = () => {
                     />
                   ))}
                 </div>
-                {adminJobs.length === 0 && <p className="text-gray-500 mt-2">No job posts associated with admin.</p>}
+                {adminJobs.length === 0 && <p className="text-gray-500 mt-2">{t('profile.adminNoJobs')}</p>}
               </div>
-
               <div>
-                <h3 className="text-xl font-black mb-4 dark:text-white">Your Admin Skills</h3>
+                <h3 className="text-xl font-black mb-4 dark:text-white">{t('profile.adminSkills')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {adminSkills.map(skill => (
                     <SkillCard
@@ -471,7 +474,7 @@ const MyProfile = () => {
                     />
                   ))}
                 </div>
-                {adminSkills.length === 0 && <p className="text-gray-500 mt-2">No skills associated with admin.</p>}
+                {adminSkills.length === 0 && <p className="text-gray-500 mt-2">{t('profile.adminNoSkills')}</p>}
               </div>
             </div>
           ) : (
@@ -502,10 +505,10 @@ const MyProfile = () => {
 
               {userItems.length === 0 && (
                 <div className="text-center py-20 bg-white/40 dark:bg-white/5 rounded-3xl border-2 border-dashed border-gray-200 dark:border-white/10">
-                  <p className="text-gray-500 dark:text-white/40 mb-4">No {userRoleLocal === "Master" ? "skills" : "job posts"} found on your profile.</p>
+                  <p className="text-gray-500 dark:text-white/40 mb-4">{userRoleLocal === "Master" ? t('profile.noSkillsFound') : t('profile.noJobsFound')}</p>
                   {userRoleLocal !== "Master" && (
                     <Link to="/create-job" className="px-6 py-3 bg-violet-600 text-white rounded-xl font-bold hover:bg-violet-700 transition-colors inline-block">
-                      Post Your First Job
+                      {t('profile.postFirstJob')}
                     </Link>
                   )}
                 </div>
@@ -520,7 +523,7 @@ const MyProfile = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Edit Profile</h3>
+              <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('modals.editProfile.title')}</h3>
               <button
                 onClick={() => setIsEditModalOpen(false)}
                 className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
@@ -536,7 +539,7 @@ const MyProfile = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">First Name</label>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.editProfile.firstName')}</label>
                   <input
                     type="text"
                     value={editFormData.firstName}
@@ -546,7 +549,7 @@ const MyProfile = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Last Name</label>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.editProfile.lastName')}</label>
                   <input
                     type="text"
                     value={editFormData.lastName}
@@ -558,7 +561,7 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Email Address</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.editProfile.email')}</label>
                 <input
                   type="email"
                   value={editFormData.email}
@@ -569,7 +572,7 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Address</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.editProfile.address')}</label>
                 <input
                   type="text"
                   value={editFormData.address}
@@ -580,7 +583,7 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Phone Number</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.editProfile.phone')}</label>
                 <input
                   type="tel"
                   value={editFormData.phoneNumber}
@@ -596,14 +599,14 @@ const MyProfile = () => {
                   onClick={() => setIsEditModalOpen(false)}
                   className="flex-1 py-4 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={editLoading}
                   className="flex-2 py-4 bg-linear-to-r from-violet-600 to-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-violet-500/25 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
                 >
-                  {editLoading ? "Saving..." : "Save Changes"}
+                  {editLoading ? t('common.loading') : t('common.saveChanges')}
                 </button>
               </div>
             </form>
@@ -616,15 +619,15 @@ const MyProfile = () => {
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-2xl rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Add Skills</h3>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('profile.addSkill')}</h3>
                 <div className="flex items-center gap-3 mt-1">
-                  <p className="text-sm text-gray-500 dark:text-white/40">Select the skills you specialize in</p>
+                  <p className="text-sm text-gray-500 dark:text-white/40">{t('modals.skill.subtitle')}</p>
                   <span className="text-gray-300 dark:text-white/20">•</span>
                   <button
                     onClick={() => setIsCreateSkillModalOpen(true)}
                     className="text-sm font-bold text-violet-600 hover:text-violet-700 dark:text:violet-400 dark:hover:text-violet-300 transition-colors"
                   >
-                    + Create New Data
+                    {t('createJob.createNewSkill')}
                   </button>
                 </div>
               </div>
@@ -671,14 +674,14 @@ const MyProfile = () => {
                 onClick={() => setIsAddSkillModalOpen(false)}
                 className="flex-1 py-4 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 transition-colors"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleAddSkillsSubmit}
                 disabled={addSkillLoading || selectedSkillIds.length === 0}
                 className="flex-2 py-4 bg-linear-to-r from-violet-600 to-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-violet-500/25 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
               >
-                {addSkillLoading ? "Saving..." : `Add ${selectedSkillIds.length} Skills`}
+                {addSkillLoading ? t('common.loading') : `${t('common.success')} ${selectedSkillIds.length}`}
               </button>
             </div>
           </div>
@@ -691,8 +694,8 @@ const MyProfile = () => {
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-md rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">New Skill</h3>
-                <p className="text-sm text-gray-500 dark:text-white/40 mt-1">Define a custom skill to add to the system</p>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('modals.skill.title')}</h3>
+                <p className="text-sm text-gray-500 dark:text-white/40 mt-1">{t('modals.skill.subtitle')}</p>
               </div>
               <button
                 onClick={() => setIsCreateSkillModalOpen(false)}
@@ -709,7 +712,7 @@ const MyProfile = () => {
               {createSkillSuccess && <div className="p-3 text-sm bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-200 dark:border-emerald-500/20">{createSkillSuccess}</div>}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Skill Name</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.skill.name')}</label>
                 <input
                   type="text"
                   value={createSkillForm.name}
@@ -721,7 +724,7 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Description</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.skill.description')}</label>
                 <textarea
                   value={createSkillForm.description}
                   onChange={(e) => setCreateSkillForm(prev => ({ ...prev, description: e.target.value }))}
@@ -737,14 +740,14 @@ const MyProfile = () => {
                   onClick={() => setIsCreateSkillModalOpen(false)}
                   className="flex-1 py-4 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={createSkillLoading}
                   className="flex-2 py-4 bg-linear-to-r from-violet-600 to-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-violet-500/25 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
                 >
-                  {createSkillLoading ? "Creating..." : "Create Skill"}
+                  {createSkillLoading ? t('modals.skill.creating') : t('modals.skill.create')}
                 </button>
               </div>
             </form>
@@ -756,7 +759,7 @@ const MyProfile = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-md rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Change Password</h3>
+              <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('modals.password.title')}</h3>
               <button
                 onClick={() => setIsChangePasswordModalOpen(false)}
                 className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
@@ -772,7 +775,7 @@ const MyProfile = () => {
               {passwordSuccess && <div className="p-3 text-sm bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-200 dark:border-emerald-500/20">{passwordSuccess}</div>}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Current Password</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.password.current')}</label>
                 <input
                   type="password"
                   value={passwordFormData.currentPassword}
@@ -783,7 +786,7 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">New Password</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.password.new')}</label>
                 <input
                   type="password"
                   value={passwordFormData.newPassword}
@@ -794,7 +797,7 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Confirm New Password</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.password.confirm')}</label>
                 <input
                   type="password"
                   value={passwordFormData.confirmNewPassword}
@@ -810,14 +813,14 @@ const MyProfile = () => {
                   onClick={() => setIsChangePasswordModalOpen(false)}
                   className="flex-1 py-4 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={passwordLoading}
                   className="flex-2 py-4 bg-primary-600 text-white rounded-2xl font-black shadow-lg shadow-primary-500/25 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
                 >
-                  {passwordLoading ? "Updating..." : "Update Password"}
+                  {passwordLoading ? t('modals.password.updating') : t('modals.password.updateButton')}
                 </button>
               </div>
             </form>
@@ -830,8 +833,8 @@ const MyProfile = () => {
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-md rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Update Status</h3>
-                <p className="text-sm text-gray-500 dark:text-white/40 mt-1">Select new status for your job</p>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('modals.status.title')}</h3>
+                <p className="text-sm text-gray-500 dark:text-white/40 mt-1">{t('modals.status.subtitle')}</p>
               </div>
               <button
                 onClick={() => setIsStatusModalOpen(false)}
@@ -879,10 +882,10 @@ const MyProfile = () => {
                       </div>
                       <div>
                         <p className={`font-semibold ${isCurrent ? "text-primary-900 dark:text-primary-100" : "text-slate-700 dark:text-slate-200"}`}>
-                          {status.name}
+                          {t(`jobs.statuses.${status.name}`)}
                         </p>
                         <p className="text-xs text-slate-500 dark:text-white/40">
-                          {isCurrent ? "Current Status" : isValidTransition ? "Available Transition" : "Locked"}
+                          {isCurrent ? t('modals.status.current') : isValidTransition ? t('modals.status.available') : t('modals.status.locked')}
                         </p>
                       </div>
                     </div>
@@ -899,7 +902,7 @@ const MyProfile = () => {
               })}
               {jobStatuses.length === 0 && (
                 <div className="text-center py-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-dashed border-gray-200 dark:border-white/10">
-                  <p className="text-xs text-gray-400 animate-pulse">Loading statuses...</p>
+                  <p className="text-xs text-gray-400 animate-pulse">{t('modals.status.loading')}</p>
                 </div>
               )}
             </div>
@@ -908,7 +911,7 @@ const MyProfile = () => {
               onClick={() => setIsStatusModalOpen(false)}
               className="w-full py-4 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 transition-colors"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
           </div>
         </div>
@@ -919,7 +922,7 @@ const MyProfile = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Edit Job</h3>
+              <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('modals.editJob.title')}</h3>
               <button
                 onClick={() => setIsJobEditModalOpen(false)}
                 className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
@@ -934,7 +937,7 @@ const MyProfile = () => {
               {jobEditError && <div className="p-3 text-sm bg-red-50 dark:bg-red-500/10 text-red-600 rounded-xl border border-red-200">{jobEditError}</div>}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Job Title</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('jobs.labels.title')}</label>
                 <input
                   type="text"
                   value={jobEditForm.title}
@@ -945,7 +948,19 @@ const MyProfile = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Description</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('jobs.labels.location')}</label>
+                <input
+                  type="text"
+                  value={jobEditForm.location}
+                  onChange={(e) => setJobEditForm({ ...jobEditForm, location: e.target.value })}
+                  required
+                  placeholder="e.g. Baku, Azerbaijan"
+                  className="w-full px-4 py-3.5 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl outline-none focus:border-violet-500 dark:text-white text-sm"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('jobs.labels.description')}</label>
                 <textarea
                   value={jobEditForm.description}
                   onChange={(e) => setJobEditForm({ ...jobEditForm, description: e.target.value })}
@@ -957,7 +972,7 @@ const MyProfile = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Budget (AZN)</label>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('jobs.labels.budget')}</label>
                   <input
                     type="number"
                     value={jobEditForm.budget}
@@ -968,8 +983,8 @@ const MyProfile = () => {
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between pl-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Required Skill</label>
-                    <span className="text-[10px] font-medium text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full">Select One</span>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{t('jobs.labels.requiredSkill')}</label>
+                    <span className="text-[10px] font-medium text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full">{t('jobs.labels.selectOne')}</span>
                   </div>
 
                   <div className="relative group">
@@ -980,7 +995,7 @@ const MyProfile = () => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search skills to find the perfect match..."
+                      placeholder={t('common.search')}
                       value={skillSearchQuery}
                       onChange={(e) => setSkillSearchQuery(e.target.value)}
                       className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white text-sm transition-all"
@@ -1018,7 +1033,7 @@ const MyProfile = () => {
                     }
                     {allAvailableSkills.filter(s => s.name.toLowerCase().includes(skillSearchQuery.toLowerCase())).length === 0 && (
                       <div className="col-span-full py-8 text-center bg-slate-50 dark:bg-white/5 rounded-2xl border border-dashed border-slate-200 dark:border-white/10">
-                        <p className="text-xs text-slate-400">No matching skills found.</p>
+                        <p className="text-xs text-slate-400">{t('createJob.noMatchingSkills') || "No matching skills found."}</p>
                       </div>
                     )}
                   </div>
@@ -1030,7 +1045,7 @@ const MyProfile = () => {
                 disabled={jobEditLoading}
                 className="w-full py-4 mt-4 bg-linear-to-r from-primary-600 to-primary-700 text-white rounded-2xl font-bold shadow-lg shadow-primary-500/25 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50"
               >
-                {jobEditLoading ? "Saving Changes..." : "Save Job Details"}
+                {jobEditLoading ? t('modals.editJob.saving') : t('modals.editJob.saveButton')}
               </button>
             </form>
           </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axiosInstance from '@/utils/axiosInstance';
 import { useDarkmode } from "@/stores/useDarkmode";
 import { useTokens } from "@/stores/useTokens";
@@ -8,6 +9,7 @@ const CreateJobPost = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    location: "",
     budget: 0,
     requiredSkillId: ""
   });
@@ -27,6 +29,7 @@ const CreateJobPost = () => {
   const navigate = useNavigate();
   const { isDarkmodeActive } = useDarkmode();
   const { role } = useTokens();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Role Guard: Masters should not be able to create jobs
@@ -42,7 +45,7 @@ const CreateJobPost = () => {
       setSkills(data);
     } catch (err) {
       console.error("Error fetching skills:", err);
-      setError("Failed to load skills. Please refresh the page.");
+      setError(t('common.error'));
     } finally {
       setSkillsLoading(false);
     }
@@ -59,7 +62,7 @@ const CreateJobPost = () => {
     setCreateSkillSuccess("");
     try {
       const response = await axiosInstance.post('/Skill', createSkillForm);
-      setCreateSkillSuccess("Skill created successfully!");
+      setCreateSkillSuccess(t('modals.skill.successMessage') || "Skill created successfully!");
       fetchSkills(); // Refresh the skills list instantly
 
       // Auto-select the newly created skill if possible
@@ -74,7 +77,7 @@ const CreateJobPost = () => {
         setCreateSkillSuccess("");
       }, 1500);
     } catch (err) {
-      setCreateSkillError(err.response?.data?.message || err.response?.data?.title || "Failed to create skill.");
+      setCreateSkillError(err.response?.data?.message || err.response?.data?.title || t('common.error'));
     } finally {
       setCreateSkillLoading(false);
     }
@@ -99,7 +102,7 @@ const CreateJobPost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.requiredSkillId) {
-      setError("Please select a required skill.");
+      setError(t('jobs.labels.requiredSkill')); // or add a specific error key
       return;
     }
 
@@ -112,11 +115,11 @@ const CreateJobPost = () => {
         setSuccess(true);
         setTimeout(() => navigate('/jobs'), 2000);
       } else {
-        setError(response.data?.message || "Failed to create job post.");
+        setError(response.data?.message || t('common.error'));
       }
     } catch (err) {
       console.error("Error creating job:", err);
-      const msg = err.response?.data?.message || "An error occurred while creating the job.";
+      const msg = err.response?.data?.message || t('common.error');
       setError(msg);
     } finally {
       setLoading(false);
@@ -133,10 +136,10 @@ const CreateJobPost = () => {
 
           <div className="mb-10 text-center md:text-left">
             <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-[#a78bfa] dark:via-[#7c3aed] dark:to-[#6d28d9] bg-clip-text text-transparent tracking-tight mb-3">
-              Post a New Job
+              {t('createJob.title')}
             </h1>
             <p className="text-gray-500 dark:text-white/40 text-lg">
-              Find the right talent for your project.
+              {t('createJob.subtitle')}
             </p>
           </div>
 
@@ -152,19 +155,32 @@ const CreateJobPost = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Job posted successfully! Redirecting...
+                {t('createJob.successMessage')}
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">Job Title</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">{t('jobs.labels.title')}</label>
                 <input
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  placeholder="e.g. Modern Web Design needed"
+                  placeholder={t('createJob.placeholders.title')}
+                  required
+                  className="w-full px-6 py-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 dark:focus:border-violet-400 transition-all font-medium"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">{t('jobs.labels.location')}</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder={t('createJob.placeholders.location')}
                   required
                   className="w-full px-6 py-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 dark:focus:border-violet-400 transition-all font-medium"
                 />
@@ -183,7 +199,7 @@ const CreateJobPost = () => {
                     }
                   `}
                 </style>
-                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">Budget (AZN)</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">{t('jobs.labels.budget')}</label>
                 <div className="relative group/budget">
                   <input
                     type="number"
@@ -202,12 +218,12 @@ const CreateJobPost = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">Description</label>
+              <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">{t('jobs.labels.description')}</label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="Describe what you need in detail..."
+                placeholder={t('createJob.placeholders.description')}
                 required
                 rows="5"
                 className="w-full px-6 py-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 dark:focus:border-violet-400 transition-all font-medium resize-none"
@@ -216,14 +232,14 @@ const CreateJobPost = () => {
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">Required Skill</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-white/70 uppercase tracking-widest pl-1">{t('jobs.labels.requiredSkill')}</label>
                 <span className="text-gray-300 dark:text-white/20">•</span>
                 <button
                   type="button"
                   onClick={() => setIsCreateSkillModalOpen(true)}
                   className="text-sm font-bold text-violet-600 hover:text-violet-700 dark:text:violet-400 dark:hover:text-violet-300 transition-colors"
                 >
-                  + Create New Skill
+                  {t('createJob.createNewSkill')}
                 </button>
               </div>
 
@@ -265,7 +281,7 @@ const CreateJobPost = () => {
               disabled={loading || success}
               className="w-full py-5 bg-linear-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-3xl font-black text-xl shadow-2xl shadow-violet-500/30 hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              {loading ? "Posting Job..." : "Publish Job Post"}
+              {loading ? t('createJob.loadingButton') : t('createJob.publishButton')}
             </button>
           </form>
         </div>
@@ -276,8 +292,8 @@ const CreateJobPost = () => {
           <div className="bg-white dark:bg-[#1a1a2e] w-full max-w-md rounded-[2.5rem] p-8 md:p-10 shadow-2xl border border-gray-200 dark:border-white/10 animate-cardAppear">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">New Skill</h3>
-                <p className="text-sm text-gray-500 dark:text-white/40 mt-1">Define a custom skill to add to the system</p>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{t('modals.skill.title')}</h3>
+                <p className="text-sm text-gray-500 dark:text-white/40 mt-1">{t('modals.skill.subtitle')}</p>
               </div>
               <button
                 onClick={() => setIsCreateSkillModalOpen(false)}
@@ -295,7 +311,7 @@ const CreateJobPost = () => {
               {createSkillSuccess && <div className="p-3 text-sm bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-200 dark:border-emerald-500/20">{createSkillSuccess}</div>}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Skill Name</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.skill.name')}</label>
                 <input
                   type="text"
                   value={createSkillForm.name}
@@ -307,7 +323,7 @@ const CreateJobPost = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">Description</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">{t('modals.skill.description')}</label>
                 <textarea
                   value={createSkillForm.description}
                   onChange={(e) => setCreateSkillForm(prev => ({ ...prev, description: e.target.value }))}
@@ -323,14 +339,14 @@ const CreateJobPost = () => {
                   onClick={() => setIsCreateSkillModalOpen(false)}
                   className="flex-1 py-4 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-2xl font-bold hover:bg-gray-200 transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={createSkillLoading}
                   className="flex-2 py-4 bg-linear-to-r from-violet-600 to-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-violet-500/25 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
                 >
-                  {createSkillLoading ? "Creating..." : "Create Skill"}
+                  {createSkillLoading ? t('modals.skill.creating') : t('modals.skill.create')}
                 </button>
               </div>
             </form>

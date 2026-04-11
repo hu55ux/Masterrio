@@ -1,0 +1,183 @@
+{
+  "nav": {
+    "allJobs": "All Jobs",
+    "postAJob": "Post a Job",
+    "myProfile": "My Profile",
+    "logout": "Logout",
+    "signIn": "Sign In",
+    "selectLanguage": "Select Language",
+    "masters": "Masters",
+    "clients": "Clients",
+    "toggleTheme": "Toggle Theme"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search...",
+    "success": "Success!",
+    "retry": "Retry"
+  },
+  "footer": {
+    "description": "Connecting talented professionals with outstanding opportunities. Your next big project or star employee is just a click away.",
+    "quickLinks": "Quick Links",
+    "contactUs": "Contact Us",
+    "address": "Baku, Azerbaijan",
+    "emailTooltip": "Send us an email",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookieSettings": "Cookie Settings"
+  },
+  "jobs": {
+    "titlePrefix": "Find Your Next",
+    "titleHighlight": "Masterpiece",
+    "titleSuffix": "",
+    "description": "Browse through a curated list of high-quality job opportunities from verified clients across the platform.",
+    "searchPlaceholder": "Search by title or skill...",
+    "noJobs": "No jobs found",
+    "tryAdjusting": "Try adjusting your search or check back later.",
+    "loadMore": "Load More Jobs",
+    "endOfCollection": "You've reached the end of the collection ✨",
+    "statuses": {
+      "All": "All",
+      "Active": "Active",
+      "Pending": "Pending",
+      "InProgress": "In Progress",
+      "Completed": "Completed",
+      "Canceled": "Canceled"
+    },
+    "labels": {
+      "title": "Job Title",
+      "location": "Location",
+      "budget": "Budget (AZN)",
+      "description": "Description",
+      "requiredSkill": "Required Skill",
+      "selectOne": "Select One"
+    }
+  },
+  "createJob": {
+    "title": "Post a New Job",
+    "subtitle": "Find the right talent for your project.",
+    "createNewSkill": "+ Create New Skill",
+    "publishButton": "Publish Job Post",
+    "loadingButton": "Posting Job...",
+    "successMessage": "Job posted successfully! Redirecting...",
+    "placeholders": {
+      "title": "e.g. Modern Web Design needed",
+      "location": "e.g. Baku, Azerbaijan",
+      "description": "Describe what you need in detail..."
+    }
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "manageTitle": "Manage {{type}}",
+    "manageTypeJobs": "Your Job Posts",
+    "manageTypeSkills": "Your Skills",
+    "manageTypePlatform": "Platform Data",
+    "addSkill": "Add Skill",
+    "noJobsFound": "No job posts found.",
+    "noSkillsFound": "No skills found.",
+    "postFirstJob": "Post Your First Job",
+    "locationHidden": "Location Hidden",
+    "yearsExperience": "Years Experience",
+    "viewProfile": "View Profile",
+    "dob": "Date of Birth",
+    "memberSince": "Member Since",
+    "specializedSkills": "Specialized Skills",
+    "activeJobs": "Active Job Posts",
+    "customerReviews": "Customer Reviews",
+    "verifiedCustomer": "Verified Customer",
+    "noComment": "No comment provided.",
+    "noReviews": "No reviews yet for this master.",
+    "editReview": "Edit Review",
+    "deleteReview": "Delete Review",
+    "writeReview": "Write Review",
+    "goBack": "Go Back",
+    "userNotFound": "User not found",
+    "adminJobs": "Your Admin Job Posts",
+    "adminSkills": "Your Admin Skills",
+    "adminNoJobs": "No job posts associated with admin.",
+    "adminNoSkills": "No skills associated with admin."
+  },
+  "modals": {
+    "rateMaster": {
+      "title": "Rate Master"
+    },
+    "editProfile": {
+      "title": "Edit Profile",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "address": "Address",
+      "phone": "Phone Number"
+    },
+    "password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "updateButton": "Update Password",
+      "updating": "Updating..."
+    },
+    "status": {
+      "title": "Update Status",
+      "subtitle": "Select new status for your job",
+      "current": "Current Status",
+      "available": "Available Transition",
+      "locked": "Locked",
+      "loading": "Loading statuses..."
+    },
+    "skill": {
+      "title": "New Skill",
+      "subtitle": "Define a custom skill to add to the system",
+      "name": "Skill Name",
+      "description": "Description",
+      "create": "Create Skill",
+      "creating": "Creating..."
+    },
+    "confirm": {
+      "deleteJobTitle": "Delete Job Post",
+      "deleteJobMessage": "Are you sure you want to permanently delete this job post?",
+      "removeSkillTitle": "Remove Skill",
+      "removeSkillMessage": "Are you sure you want to remove this skill from your profile?",
+      "deleteReviewMessage": "Are you sure you want to delete your rating?"
+    },
+    "editJob": {
+      "title": "Edit Job",
+      "saving": "Saving Changes...",
+      "saveButton": "Save Job Details"
+    },
+    "contact": {
+      "email": "Email Address",
+      "message": "Your Message",
+      "messagePlaceholder": "How can we help you?",
+      "sendButton": "Send Message",
+      "successMessage": "Your message has been received. We'll get back to you soon!"
+    }
+  },
+  "catalog": {
+    "masters": {
+      "title": "Browse <span class=\"text-violet-600\">Expert Masters</span>",
+      "subtitle": "Find the perfect professional for your project. Browse through our verified catalog of skilled masters.",
+      "searchPlaceholder": "Search by name...",
+      "noResults": "No Masters Found",
+      "noResultsSub": "Try adjusting your search criteria.",
+      "loadMore": "Load More Masters",
+      "fetchError": "Failed to load masters directory."
+    },
+    "clients": {
+      "title": "Connect with <span class=\"text-emerald-500\">Clients</span>",
+      "subtitle": "Explore job opportunities and connect with potential clients looking for your skills.",
+      "searchPlaceholder": "Search by name...",
+      "noResults": "No Clients Found",
+      "noResultsSub": "Try adjusting your search criteria.",
+      "loadMore": "Load More Clients",
+      "fetchError": "Failed to load clients directory."
+    }
+  }
+}

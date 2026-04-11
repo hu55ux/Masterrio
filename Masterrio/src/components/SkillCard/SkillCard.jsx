@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const SkillCard = ({ skill, isManageMode = false, onDelete }) => {
+  const { t } = useTranslation();
   const handleRemove = (e) => {
     e.stopPropagation();
     onDelete(skill.id);
@@ -32,7 +34,7 @@ const SkillCard = ({ skill, isManageMode = false, onDelete }) => {
                 <button 
                   onClick={handleRemove}
                   className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
-                  title="Remove Skill"
+                  title={t('modals.confirm.removeSkillTitle')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDarkmode } from "@/stores/useDarkmode";
 import { useTokens } from "@/stores/useTokens";
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const { isDarkmodeActive, toggleDarkmode } = useDarkmode();
   const { accessToken, role, clearTokens } = useTokens();
   const navigate = useNavigate();
@@ -33,23 +36,31 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-1 bg-slate-100/50 dark:bg-white/5 p-1 rounded-2xl border border-slate-200/50 dark:border-white/5">
-          <NavLink to="/jobs" active={isActive('/jobs')}>All Jobs</NavLink>
+          <NavLink to="/jobs" active={isActive('/jobs')}>{t('nav.allJobs')}</NavLink>
           {accessToken && (
             <>
-              {role !== 'Master' && (
-                <NavLink to="/create-job" active={isActive('/create-job')}>Post a Job</NavLink>
+              {(role === 'Client' || role === 'Admin') && (
+                <>
+                  <NavLink to="/create-job" active={isActive('/create-job')}>{t('nav.postAJob')}</NavLink>
+                  <NavLink to="/masters" active={isActive('/masters')}>{t('nav.masters')}</NavLink>
+                </>
               )}
-              <NavLink to="/my-profile" active={isActive('/my-profile')}>My Profile</NavLink>
+              {(role === 'Master' || role === 'Admin') && (
+                <NavLink to="/clients" active={isActive('/clients')}>{t('nav.clients')}</NavLink>
+              )}
+              <NavLink to="/my-profile" active={isActive('/my-profile')}>{t('nav.myProfile')}</NavLink>
             </>
           )}
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 md:gap-3">
+          <LanguageSwitcher />
+
           <button
             onClick={toggleDarkmode}
             className="p-2 md:p-2.5 rounded-xl bg-white dark:bg-white/5 text-slate-800 dark:text-white border border-slate-200 dark:border-white/10 shadow-sm hover:scale-110 transition-all duration-300"
-            title="Toggle Theme"
+            title={t('nav.toggleTheme')}
           >
             {isDarkmodeActive ? "☀️" : "🌙"}
           </button>
@@ -59,14 +70,14 @@ const Navbar = () => {
               onClick={handleLogout}
               className="hidden md:flex px-5 py-2.5 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-xl text-sm font-bold border border-red-100 dark:border-red-500/20 hover:bg-red-500 hover:text-white transition-all active:scale-95"
             >
-              Logout
+              {t('nav.logout')}
             </button>
           ) : (
             <Link
               to="/login"
               className="px-5 md:px-6 py-2 md:py-2.5 bg-linear-to-r from-primary-600 to-primary-700 text-white rounded-xl text-xs md:text-sm font-bold premium-shadow hover:brightness-110 transition-all active:scale-95 text-center"
             >
-              Sign In
+              {t('nav.signIn')}
             </Link>
           )}
 
@@ -86,18 +97,24 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 mt-2 mx-4 p-4 glass rounded-4xl shadow-2xl border border-slate-200 dark:border-white/10 animate-cardAppear animate-fadeIn z-60">
           <div className="flex flex-col gap-2">
-            <MobileNavLink to="/jobs" active={isActive('/jobs')} onClick={() => setIsMobileMenuOpen(false)}>All Jobs</MobileNavLink>
+            <MobileNavLink to="/jobs" active={isActive('/jobs')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.allJobs')}</MobileNavLink>
             {accessToken && (
               <>
-                {role !== 'Master' && (
-                  <MobileNavLink to="/create-job" active={isActive('/create-job')} onClick={() => setIsMobileMenuOpen(false)}>Post a Job</MobileNavLink>
+                {(role === 'Client' || role === 'Admin') && (
+                  <>
+                    <MobileNavLink to="/create-job" active={isActive('/create-job')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.postAJob')}</MobileNavLink>
+                    <MobileNavLink to="/masters" active={isActive('/masters')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.masters')}</MobileNavLink>
+                  </>
                 )}
-                <MobileNavLink to="/my-profile" active={isActive('/my-profile')} onClick={() => setIsMobileMenuOpen(false)}>My Profile</MobileNavLink>
+                {(role === 'Master' || role === 'Admin') && (
+                  <MobileNavLink to="/clients" active={isActive('/clients')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.clients')}</MobileNavLink>
+                )}
+                <MobileNavLink to="/my-profile" active={isActive('/my-profile')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.myProfile')}</MobileNavLink>
                 <button
                   onClick={handleLogout}
                   className="w-full mt-2 p-4 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-2xl text-sm font-bold text-left flex items-center justify-between"
                 >
-                  Logout
+                  {t('nav.logout')}
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                   </svg>

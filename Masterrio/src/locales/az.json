@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "allJobs": "Bütün İşlər",
+    "postAJob": "İş Paylaş",
+    "myProfile": "Profilim",
+    "logout": "Çıxış",
+    "signIn": "Daxil Ol",
+    "selectLanguage": "Dil seçin",
+    "masters": "Ustalar",
+    "clients": "Müştərilər",
+    "toggleTheme": "Temanı dəyiş"
+  },
+  "common": {
+    "signIn": "Daxil Ol",
+    "logout": "Çıxış",
+    "error": "Xəta baş verdi",
+    "success": "Uğurlu",
+    "loading": "Yüklənir...",
+    "cancel": "Ləğv Et",
+    "saveChanges": "Dəyişiklikləri Saxla",
+    "search": "Axtar...",
+    "notSpecified": "Qeyd edilməyib",
+    "notProvided": "Təqdim edilməyib",
+    "unknown": "Naməlum",
+    "retry": "Yenidən cəhd et"
+  },
+  "footer": {
+    "description": "Talantlı mütəxəssisləri əla fürsətlərlə birləşdiririk. Növbəti böyük layihəniz və ya ulduz işçiniz bir klik uzaqlıqdadır.",
+    "quickLinks": "Sürətli Keçidlər",
+    "contactUs": "Bizimlə Əlaqə",
+    "address": "Bakı, Azərbaycan",
+    "emailTooltip": "Bizə e-poçt göndərin",
+    "rights": "Bütün hüquqlar qorunur.",
+    "privacy": "Məxfilik Siyasəti",
+    "terms": "İstifadə Şərtləri",
+    "cookieSettings": "Kuki Ayarları"
+  },
+  "jobs": {
+    "titlePrefix": "Növbəti",
+    "titleHighlight": "Şahəsərinizi",
+    "titleSuffix": "Tapın",
+    "description": "Platformada təsdiqlənmiş müştərilərin yüksək keyfiyyətli iş təkliflərinə nəzər salın.",
+    "searchPlaceholder": "Başlıq və ya bacarığa görə axtar...",
+    "noJobs": "Heç bir iş tapılmadı",
+    "tryAdjusting": "Axtarışınızı tənzimləməyə çalışın və ya daha sonra yoxlayın.",
+    "loadMore": "Daha çox iş yüklə",
+    "endOfCollection": "Siz kolleksiyanın sonuna çatdınız ✨",
+    "statuses": {
+      "All": "Hamısı",
+      "Active": "Aktiv",
+      "Pending": "Gözləmədə",
+      "InProgress": "İcra Edilir",
+      "Completed": "Tamamlanıb",
+      "Canceled": "Ləğv Edilib"
+    }
+  },
+  "profile": {
+    "editProfile": "Profili Redaktə Et",
+    "changePassword": "Şifrəni Dəyiş",
+    "manageTitle": "{{type}} İdarə Et",
+    "manageTypeJobs": "İş Elanlarınız",
+    "manageTypeSkills": "Bacarıqlarınız",
+    "manageTypePlatform": "Platforma Məlumatları",
+    "addSkill": "Bacarıq Əlavə Et",
+    "noJobsFound": "Heç bir iş elanı tapılmadı.",
+    "noSkillsFound": "Heç bir bacarıq tapılmadı.",
+    "postFirstJob": "İlk İş Elanını Paylaş",
+    "locationHidden": "Məkan Gizlidir",
+    "yearsExperience": "İl Təcrübə",
+    "viewProfile": "Profilə Bax",
+    "dob": "Doğum Tarixi",
+    "memberSince": "Üzvlük Tarixi",
+    "specializedSkills": "Xüsusi Bacarıqlar",
+    "activeJobs": "Aktiv İş Elanları",
+    "customerReviews": "Müştəri Rəyləri",
+    "verifiedCustomer": "Təsdiqlənmiş Müştəri",
+    "noComment": "Rəy bildirilməyib.",
+    "noReviews": "Bu usta üçün hələ rəy yoxdur.",
+    "editReview": "Rəyi Redaktə Et",
+    "deleteReview": "Rəyi Sil",
+    "writeReview": "Rəy Yaz",
+    "goBack": "Geri Qayıt",
+    "userNotFound": "İstifadəçi tapılmadı",
+    "adminJobs": "Sizin Admin İş Elanlarınız",
+    "adminSkills": "Sizin Admin Bacarıqlarınız",
+    "adminNoJobs": "Adminlə bağlı heç bir iş elanı tapılmadı.",
+    "adminNoSkills": "Adminlə bağlı heç bir bacarıq tapılmadı."
+  },
+  "modals": {
+    "rateMaster": {
+       "title": "Ustaya Qiymət Ver"
+    },
+    "editProfile": {
+      "title": "Profili Redaktə Et",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "email": "E-poçt Ünvanı",
+      "address": "Ünvan",
+      "phone": "Telefon Nömrəsi"
+    },
+    "password": {
+      "title": "Şifrəni Dəyiş",
+      "current": "Cari Şifrə",
+      "new": "Yeni Şifrə",
+      "confirm": "Yeni Şifrənin Təsdiqi",
+      "updateButton": "Şifrəni Yenilə",
+      "updating": "Yenilənir..."
+    },
+    "status": {
+      "title": "Statusu Yenilə",
+      "subtitle": "İşiniz üçün yeni status seçin",
+      "current": "Cari Status",
+      "available": "Mümkün Keçid",
+      "locked": "Kilidli",
+      "loading": "Statuslar yüklənir..."
+    },
+    "skill": {
+      "title": "Yeni Bacarıq",
+      "subtitle": "Sistemə əlavə etmək üçün fərdi bacarıq təyin edin",
+      "name": "Bacarıq Adı",
+      "description": "Təsvir",
+      "create": "Bacarıq Yarat",
+      "creating": "Yaradılır..."
+    },
+    "confirm": {
+      "deleteJobTitle": "İş Elanını Sil",
+      "deleteJobMessage": "Bu iş elanını daimi olaraq silmək istədiyinizə əminsiniz?",
+      "removeSkillTitle": "Bacarığı Sil",
+      "removeSkillMessage": "Bu bacarığı profilinizdən silmək istədiyinizə əminsiniz?",
+      "deleteReviewMessage": "Bu rəyi silmək istədiyinizə əminsiniz?"
+    },
+    "editJob": {
+      "title": "İş Elanını Redaktə Et",
+      "saving": "Yadda saxlanılır...",
+      "saveButton": "Dəyişiklikləri Saxla"
+    },
+    "contact": {
+      "email": "E-poçt Ünvanı",
+      "message": "Mesajınız",
+      "messagePlaceholder": "Sizə necə kömək edə bilərik?",
+      "sendButton": "Mesajı Göndər",
+      "successMessage": "Mesajınız qəbul edildi. Tezliklə sizinlə əlaqə saxlayacağıq!"
+    }
+  },
+  "catalog": {
+    "masters": {
+      "title": "Ekspert <span class=\"text-violet-600\">Ustaları</span> kəşf edin",
+      "subtitle": "Layihəniz üçün mükəmməl mütəxəssisi tapın. Bizim təsdiqlənmiş bacarıqlı ustalar kataloqumuza nəzər salın.",
+      "searchPlaceholder": "Ada görə axtar...",
+      "noResults": "Usta tapılmadı",
+      "noResultsSub": "Axtarış meyarlarınızı tənzimləməyə çalışın.",
+      "loadMore": "Daha çox usta yüklə",
+      "fetchError": "Ustalar siyahısını yükləmək mümkün olmadı."
+    },
+    "clients": {
+      "title": "Müştərilərlə <span class=\"text-emerald-500\">Əlaqə</span> qurun",
+      "subtitle": "İş imkanlarını araşdırın və bacarıqlarınıza uyğun potensial müştərilərlə əlaqə saxlayın.",
+      "searchPlaceholder": "Ada görə axtar...",
+      "noResults": "Müştəri tapılmadı",
+      "noResultsSub": "Axtarış meyarlarınızı tənzimləməyə çalışın.",
+      "loadMore": "Daha çox müştəri yüklə",
+      "fetchError": "Müştərilər siyahısını yükləmək mümkün olmadı."
+    }
+  }
+}

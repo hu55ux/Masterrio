@@ -94,6 +94,12 @@ const JobDetail = () => {
                   <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{job.budget} AZN</span>
                 </div>
                 <div>
+                  <span className="text-xs text-gray-500 dark:text-white/40 uppercase font-bold tracking-widest block mb-1">Location</span>
+                  <span className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                    {job.location || "N/A"}
+                  </span>
+                </div>
+                <div>
                   <span className="text-xs text-gray-500 dark:text-white/40 uppercase font-bold tracking-widest block mb-1">Status</span>
                   <span className="px-3 py-1 bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 rounded-full text-sm font-bold">
                     {job.status}

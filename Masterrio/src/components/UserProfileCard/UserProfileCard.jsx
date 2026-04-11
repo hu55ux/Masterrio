@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 const UserProfileCard = ({ user }) => {
+  const { t } = useTranslation();
   if (!user) return null;
 
   const isMaster = Array.isArray(user.roles) ? user.roles.includes('Master') : user.role === 'Master';
@@ -42,31 +44,31 @@ const UserProfileCard = ({ user }) => {
         {/* Role Based Stats/Info */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-2xl border border-transparent hover:border-violet-500/20 transition-colors">
-            <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">Location</span>
+            <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">{t('jobs.labels.location')}</span>
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate block">
-              {user.address || 'Not specified'}
+              {user.address || t('common.notSpecified')}
             </span>
           </div>
           <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-2xl border border-transparent hover:border-violet-500/20 transition-colors">
-            <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">Phone</span>
+            <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">{t('modals.editProfile.phone')}</span>
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate block">
-              {user.phoneNumber || 'Not provided'}
+              {user.phoneNumber || t('common.notProvided')}
             </span>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-2xl border border-transparent hover:border-violet-500/20 transition-colors">
-            <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">Date of Birth</span>
+            <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">{t('profile.dob')}</span>
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString() : 'Unknown'}
+              {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString() : t('common.unknown')}
             </span>
           </div>
           <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-2xl border border-transparent hover:border-violet-500/20 transition-colors">
             <span className="block text-xs text-gray-500 dark:text-white/40 uppercase tracking-widest mb-1 font-semibold">
-              {isMaster ? 'Experience' : 'Member Since'}
+              {isMaster ? t('profile.yearsExperience') : t('profile.memberSince')}
             </span>
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {isMaster ? `${user.experience || 0} Years` : 'Mar 2024'}
+              {isMaster ? `${user.experience || 0} ${t('profile.yearsExperience')}` : 'Mar 2024'}
             </span>
           </div>
         </div>
