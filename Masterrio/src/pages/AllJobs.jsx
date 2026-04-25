@@ -30,15 +30,23 @@ const AllJobs = () => {
 
     setError(null);
     try {
-      const params = {
-        Page: pageNumber,
-        PageSize: pageSize,
-        Sort: 'CreatedDate',
-        SortDirection: 'desc',
+      const statusMap = {
+        "Pending": 0,
+        "Active": 1,
+        "InProgress": 2,
+        "Completed": 3,
+        "Canceled": 4
       };
 
-      if (searchTerm.trim()) params.SearchTerm = searchTerm.trim();
-      if (status !== "All") params.Status = status;
+      const params = {
+        page: pageNumber,
+        pageSize: pageSize,
+        sort: 'CreatedDate',
+        sortDirection: 'desc',
+      };
+
+      if (searchTerm.trim()) params.searchTerm = searchTerm.trim();
+      if (status !== "All") params.status = statusMap[status];
 
       console.log("Fetching jobs with params:", params);
       const response = await axiosInstance.get('/JobPost/paged', { params });

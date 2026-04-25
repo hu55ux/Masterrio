@@ -5,10 +5,15 @@ import axiosInstance from '@/utils/axiosInstance';
 const StatusBadge = ({ status }) => {
   const configs = {
     0: { label: 'Pending', icon: '⏳', dot: 'bg-amber-500', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-400/10', border: 'border-amber-200/50 dark:border-amber-400/20' },
+    'Pending': { label: 'Pending', icon: '⏳', dot: 'bg-amber-500', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-400/10', border: 'border-amber-200/50 dark:border-amber-400/20' },
     1: { label: 'Active', icon: '⚡', dot: 'bg-emerald-500', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-400/10', border: 'border-emerald-200/50 dark:border-emerald-400/20', pulse: true },
+    'Active': { label: 'Active', icon: '⚡', dot: 'bg-emerald-500', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-400/10', border: 'border-emerald-200/50 dark:border-emerald-400/20', pulse: true },
     2: { label: 'In Progress', icon: '🔄', dot: 'bg-blue-500', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-400/10', border: 'border-blue-200/50 dark:border-blue-400/20', pulse: true },
+    'InProgress': { label: 'In Progress', icon: '🔄', dot: 'bg-blue-500', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-400/10', border: 'border-blue-200/50 dark:border-blue-400/20', pulse: true },
     3: { label: 'Completed', icon: '✨', dot: 'bg-violet-500', color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-50 dark:bg-violet-400/10', border: 'border-violet-200/50 dark:border-violet-400/20' },
+    'Completed': { label: 'Completed', icon: '✨', dot: 'bg-violet-500', color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-50 dark:bg-violet-400/10', border: 'border-violet-200/50 dark:border-violet-400/20' },
     4: { label: 'Canceled', icon: '🚫', dot: 'bg-rose-500', color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-400/10', border: 'border-rose-200/50 dark:border-rose-400/20' },
+    'Canceled': { label: 'Canceled', icon: '🚫', dot: 'bg-rose-500', color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-400/10', border: 'border-rose-200/50 dark:border-rose-400/20' },
   };
 
   const config = configs[status] || configs[0];

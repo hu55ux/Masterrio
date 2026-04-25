@@ -13,6 +13,8 @@ import JobDetail from "./pages/JobDetail";
 import CreateJobPost from "./pages/CreateJobPost";
 import Masters from "./pages/Catalog/Masters";
 import Clients from "./pages/Catalog/Clients";
+import FileManagementDemo from "./pages/FileManagementDemo";
+import AdminFileManagement from "./pages/AdminFileManagement";
 import { useEffect } from "react";
 import { useDarkmode } from "@/stores/useDarkmode";
 
@@ -50,6 +52,8 @@ function App() {
                     <Route path="/my-profile" element={<MyProfile />} />
                     <Route path="/masters" element={<Masters />} />
                     <Route path="/clients" element={<Clients />} />
+                    <Route path="/file-demo" element={<FileManagementDemo />} />
+                    <Route path="/admin/files" element={<AdminFileManagement />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </PageTransition>

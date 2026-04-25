@@ -49,6 +49,9 @@ const Navbar = () => {
                 <NavLink to="/clients" active={isActive('/clients')}>{t('nav.clients')}</NavLink>
               )}
               <NavLink to="/my-profile" active={isActive('/my-profile')}>{t('nav.myProfile')}</NavLink>
+              {role === 'Admin' && (
+                <NavLink to="/admin/files" active={isActive('/admin/files')}>{t('nav.adminFiles')}</NavLink>
+              )}
             </>
           )}
         </div>
@@ -110,6 +113,9 @@ const Navbar = () => {
                   <MobileNavLink to="/clients" active={isActive('/clients')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.clients')}</MobileNavLink>
                 )}
                 <MobileNavLink to="/my-profile" active={isActive('/my-profile')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.myProfile')}</MobileNavLink>
+                {role === 'Admin' && (
+                  <MobileNavLink to="/admin/files" active={isActive('/admin/files')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.adminFiles')}</MobileNavLink>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full mt-2 p-4 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-2xl text-sm font-bold text-left flex items-center justify-between"
